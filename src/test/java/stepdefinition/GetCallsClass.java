@@ -2,12 +2,17 @@ package stepdefinition;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
+import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+
+import static io.restassured.RestAssured.given;
 
 public class GetCallsClass {
 
     @Given("An authorized user")
     public void an_authorized_user() {
-    System.out.println("Test Given");
+        RestAssured.baseURI = "https://reqres.in/";
+
     }
 
     @When("want details of page {string}")
