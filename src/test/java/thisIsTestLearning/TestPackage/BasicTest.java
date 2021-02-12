@@ -1,4 +1,4 @@
-package thisIsTestLearning;
+package thisIsTestLearning.TestPackage;
 
 import io.restassured.RestAssured;
 import io.restassured.filter.session.SessionFilter;

@@ -5,19 +5,6 @@ import java.util.List;
 public class GetUser {
   private String page;
   private String per_page;
-
-  @Override
-  public String toString() {
-    return "GetUser{" +
-            "page='" + page + '\'' +
-            ", per_page='" + per_page + '\'' +
-            ", total='" + total + '\'' +
-            ", total_pages='" + total_pages + '\'' +
-            ", data=" + data +
-            ", support=" + support +
-            '}';
-  }
-
   private String total;
   private String total_pages;
   private List<Data> data;
@@ -73,5 +60,17 @@ public class GetUser {
     this.data = data;
   }
 
+
+  @Override
+  public String toString() {
+    return "GetUser{" +
+            "page='" + page + '\'' +
+            ", per_page='" + per_page + '\'' +
+            ", total='" + total + '\'' +
+            ", total_pages='" + total_pages + '\'' +
+            ", data=" + data +
+            ", support=" + support +
+            '}';
+  }
 
 }
