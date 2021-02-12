@@ -1,10 +1,11 @@
-package thisIsTestLearning;
+package thisIsTestLearning.TestPackage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.Test;
+import thisIsTestLearning.RegisterPojo;
 import thisIsTestLearning.model.Data;
 import thisIsTestLearning.model.GetUser;
 import thisIsTestLearning.model.Support;
