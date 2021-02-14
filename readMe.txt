@@ -1,3 +1,3 @@
 Test
 ss
-check git cli
+check git
