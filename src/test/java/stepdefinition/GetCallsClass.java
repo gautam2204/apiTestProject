@@ -3,11 +3,13 @@ package stepdefinition;
 import Enums.APIResources;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.Header;
 import io.restassured.http.Headers;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.Assert;
 import utility.UtilityClass;
@@ -15,27 +17,23 @@ import utility.UtilityClass;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import static io.restassured.RestAssured.given;
 
 public class GetCallsClass extends UtilityClass {
 
   private Response response;
+  Headers headers = new Headers();
 
-  @When("want details of page {string}")
-  public void want_details_of_page(String string) {
-    System.out.println("Test When");
-  }
+
 
   @Then("I recieve a {int}")
   public void i_recieve_a(int code) {
     Assert.assertEquals(code,response.getStatusCode());
   }
 
-  @Then("body for the request")
-  public void body_for_the_request() {}
 
-  Headers headers = new Headers();
 
   @Given("I set a GET details service endpoint with header")
   public void iSetAGETDetailsServiceEndpointWithHeaderAnd(DataTable dataTable)
@@ -76,5 +74,36 @@ public class GetCallsClass extends UtilityClass {
             .spec(responseSpecification())
             .extract()
             .response();
+  }
+  @Then("validate body for the request")
+  public void validate_body_for_the_request(DataTable dataTable) {
+    // Write code here that turns the phrase above into concrete actions
+    // For automatic transformation, change DataTable to one of
+    // E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
+    // Map<K, List<V>>. E,K,V must be a String, Integer, Float,
+    // Double, Byte, Short, Long, BigInteger or BigDecimal.
+    //
+    // For other transformations you can register a DataTableType.
+
+    Map<String,String> map = dataTable.asMap(String.class,String.class);
+
+    for (Map.Entry<String, String> map1:map.entrySet() ) {
+      JsonPath jsonPath = new JsonPath(response.asString());
+      String k = jsonPath.get(map1.getKey());
+      String v = map1.getValue();
+      Assert.assertEquals(k,v);
+    }
+
+       /* List<Map<String,Object>> mapList = dataTable.asMaps(String.class,Object.class);
+        mapList.forEach(new Consumer<Map<String, Object>>() {
+          @Override
+          public void accept(Map<String, Object> stringObjectMap) {
+            *//*JsonPath jsonPath = new JsonPath(response.asString());
+            String k = jsonPath.get(stringObjectMap.get("key").toString());
+            String v = stringObjectMap.get("value").toString();
+            Assert.assertEquals(k,v);*//*
+          }
+        });*/
+
   }
 }
