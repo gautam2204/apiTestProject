@@ -15,25 +15,26 @@ Feature: This feature is to test get requests
       | status_code | resource |
       | 200         | GETUser  |
 
-    @Post_Test
-    Scenario Outline: Post user to the server
-      Given I set a "POST" details service endpoint with header
-        | Content-Type | application/json |
-      When I send a POST request to "<resource>" with "<user_Details>" body
-      Then I recieve a <status_code>
-      And validate body for the request
-        | data[1].first_name | Lindsay                |
-        | data[2].first_name | Tobias                 |
-        | data[3].email      | byron.fields@reqres.in |
+  @Post_Test
+  Scenario Outline: Post user to the server
+    Given I set a "POST" details service endpoint with header
+      | Content-Type | application/json |
+    When I send a POST request to "<resource>" with "<user_Details>" body
+    Then I recieve a <status_code>
+    And validate body for the request
+     # | id        | 24                       |
+      | name      | morpheus                 |
+     # | createdAt | 2021-02-16T14:32:32.651Z |
 
-      Examples:
-        | status_code | resource |user_Details|
-        | 200         | POSTUser  |User|
+
+    Examples:
+      | status_code | resource | user_Details |
+      | 201         | POSTUser | User         |
 
 
   @CaptureGroups
   Scenario Outline: Capture Groups
-    """
+  """
     This is to Test Regular expression to accept any string
     """
     Given I log in as an "admin" to the site
@@ -50,5 +51,5 @@ Feature: This feature is to test get requests
 
     Examples:
       | anyScenario |
-    |    negative     |
+      | negative    |
 

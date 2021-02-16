@@ -35,7 +35,7 @@ User user;
   }
 
   @Given("^I set a \"([^\"]*)\" details service endpoint with header$")
-  public void iSetAGETDetailsServiceEndpointWithHeaderAnd(DataTable dataTable)
+  public void iSetAGETDetailsServiceEndpointWithHeaderAnd(String request,DataTable dataTable)
       throws JsonProcessingException {
     /*  List<Map<String,String>> mapList = dataTable.asMaps(String.class,String.class);
     System.out.println(mapList);
@@ -46,6 +46,7 @@ User user;
             this.header = new Header(stringStringMap.get("key"),stringStringMap.get("value"));
         });*/
     // System.out.println("Header is \n"+header.toString());
+    System.out.println(request);
     List<Header> headerList = new ArrayList<Header>();
     Map<String, String> map = dataTable.asMap(String.class, String.class);
     for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -119,6 +120,7 @@ User user;
                     .spec(requestSpecBuilder())
                     .when()
                     .headers(headers)
+                    .body(user)
                     .post(APIResources.valueOf(resource).getResource())
                     .then()
                     .spec(responseSpecification())
@@ -131,7 +133,7 @@ User user;
   }
 
   private User createUser() {
-    return User.builder().job("").name("").build();
+    return User.builder().job("leader").name("morpheus").build();
 
 
   }
