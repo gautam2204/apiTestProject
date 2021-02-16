@@ -2,7 +2,8 @@ package Enums;
 
 public enum APIResources {
 
-    GETUser("/api/users?page=2");
+    GETUser("/api/users"),
+    POSTUser("/api/users");
 
    private final String resource;
 

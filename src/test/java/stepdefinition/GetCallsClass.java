@@ -2,6 +2,7 @@ package stepdefinition;
 
 import Enums.APIResources;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -12,6 +13,7 @@ import io.restassured.http.Headers;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.Assert;
+import pojo.User;
 import utility.UtilityClass;
 
 import java.util.ArrayList;
@@ -25,17 +27,14 @@ public class GetCallsClass extends UtilityClass {
 
   private Response response;
   Headers headers = new Headers();
-
-
+User user;
 
   @Then("I recieve a {int}")
   public void i_recieve_a(int code) {
-    Assert.assertEquals(code,response.getStatusCode());
+    Assert.assertEquals(code, response.getStatusCode());
   }
 
-
-
-  @Given("I set a GET details service endpoint with header")
+  @Given("^I set a \"([^\"]*)\" details service endpoint with header$")
   public void iSetAGETDetailsServiceEndpointWithHeaderAnd(DataTable dataTable)
       throws JsonProcessingException {
     /*  List<Map<String,String>> mapList = dataTable.asMaps(String.class,String.class);
@@ -68,6 +67,7 @@ public class GetCallsClass extends UtilityClass {
         given()
             .spec(requestSpecBuilder())
             .when()
+            .queryParam("page", 2)
             .headers(headers)
             .get(APIResources.valueOf(resource).getResource())
             .then()
@@ -75,6 +75,7 @@ public class GetCallsClass extends UtilityClass {
             .extract()
             .response();
   }
+
   @Then("validate body for the request")
   public void validate_body_for_the_request(DataTable dataTable) {
     // Write code here that turns the phrase above into concrete actions
@@ -85,25 +86,69 @@ public class GetCallsClass extends UtilityClass {
     //
     // For other transformations you can register a DataTableType.
 
-    Map<String,String> map = dataTable.asMap(String.class,String.class);
+    Map<String, String> map = dataTable.asMap(String.class, String.class);
 
-    for (Map.Entry<String, String> map1:map.entrySet() ) {
+    for (Map.Entry<String, String> map1 : map.entrySet()) {
       JsonPath jsonPath = new JsonPath(response.asString());
       String k = jsonPath.get(map1.getKey());
       String v = map1.getValue();
-      Assert.assertEquals(k,v);
+      Assert.assertEquals(k, v);
     }
 
-       /* List<Map<String,Object>> mapList = dataTable.asMaps(String.class,Object.class);
-        mapList.forEach(new Consumer<Map<String, Object>>() {
-          @Override
-          public void accept(Map<String, Object> stringObjectMap) {
-            *//*JsonPath jsonPath = new JsonPath(response.asString());
-            String k = jsonPath.get(stringObjectMap.get("key").toString());
-            String v = stringObjectMap.get("value").toString();
-            Assert.assertEquals(k,v);*//*
-          }
-        });*/
+    /* List<Map<String,Object>> mapList = dataTable.asMaps(String.class,Object.class);
+    mapList.forEach(new Consumer<Map<String, Object>>() {
+      @Override
+      public void accept(Map<String, Object> stringObjectMap) {
+        */
+    /*JsonPath jsonPath = new JsonPath(response.asString());
+    String k = jsonPath.get(stringObjectMap.get("key").toString());
+    String v = stringObjectMap.get("value").toString();
+    Assert.assertEquals(k,v);*/
+    /*
+      }
+    });*/
 
+  }
+  @When("I send a POST request to {string} with {string} body")
+  public void i_send_a_POST_request_to_with_body(String resource, String UserDetails) throws JsonProcessingException {
+    User user = createUser();
+    /*ObjectMapper objectMapper= new ObjectMapper();
+    String jsonFormatString = objectMapper.writeValueAsString(user);*/
+    response =
+            given()
+                    .spec(requestSpecBuilder())
+                    .when()
+                    .headers(headers)
+                    .post(APIResources.valueOf(resource).getResource())
+                    .then()
+                    .spec(responseSpecification())
+                    .extract()
+                    .response();
+
+
+
+
+  }
+
+  private User createUser() {
+    return User.builder().job("").name("").build();
+
+
+  }
+
+  @Given("^I log in as an (.*) to the site$")
+  public void iLogInAsAnAdmin(String str) {
+    System.out.println(str);
+  }
+
+  @Given("^I work as (Engineer|Labour) in the (.*) company")
+  public void iWorkAsEngineerInTheSoftwareCompany(String str,String str1) {
+    System.out.println(str+"  --- "+str1);
+  }
+
+  @Given("^I will test positive scenario(?: as well as \"([^\"]*)\")?$")
+  public void iWillTestPositiveScenarioAsWellAs(String scenario) {
+    String scenarioName = scenario==null?"No Value":"Have Value";
+    System.out.println(scenarioName);
   }
 }
