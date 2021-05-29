@@ -53,3 +53,19 @@ Feature: This feature is to test get requests
       | anyScenario |
       | negative    |
 
+  @Get_Test
+  Scenario Outline: Get Vaccination Slot for covid in Dehradun Premnagar
+    Given I set a "GET" details service endpoint with header
+      | Content-Type | hi_IN |
+    |  Accept            |   application/json    |
+    When I send a GET request to the covid server "<resource>"
+    Then I recieve a <status_code>
+   ## And validate body for the request
+   ##   | data[1].first_name | Lindsay                |
+
+    Examples:
+      | status_code | resource |
+      | 200         | GETCOVIDSLOT  |
+
+
+

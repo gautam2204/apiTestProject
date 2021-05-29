@@ -12,6 +12,7 @@ import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.junit.Assert;
 import pojo.User;
 import utility.UtilityClass;
@@ -27,7 +28,7 @@ public class GetCallsClass extends UtilityClass {
 
   private Response response;
   Headers headers = new Headers();
-User user;
+  User user;
 
   @Then("I recieve a {int}")
   public void i_recieve_a(int code) {
@@ -35,7 +36,7 @@ User user;
   }
 
   @Given("^I set a \"([^\"]*)\" details service endpoint with header$")
-  public void iSetAGETDetailsServiceEndpointWithHeaderAnd(String request,DataTable dataTable)
+  public void iSetAGETDetailsServiceEndpointWithHeaderAnd(String request, DataTable dataTable)
       throws JsonProcessingException {
     /*  List<Map<String,String>> mapList = dataTable.asMaps(String.class,String.class);
     System.out.println(mapList);
@@ -110,32 +111,28 @@ User user;
     });*/
 
   }
+
   @When("I send a POST request to {string} with {string} body")
-  public void i_send_a_POST_request_to_with_body(String resource, String UserDetails) throws JsonProcessingException {
+  public void i_send_a_POST_request_to_with_body(String resource, String UserDetails)
+      throws JsonProcessingException {
     User user = createUser();
     /*ObjectMapper objectMapper= new ObjectMapper();
     String jsonFormatString = objectMapper.writeValueAsString(user);*/
     response =
-            given()
-                    .spec(requestSpecBuilder())
-                    .when()
-                    .headers(headers)
-                    .body(user)
-                    .post(APIResources.valueOf(resource).getResource())
-                    .then()
-                    .spec(responseSpecification())
-                    .extract()
-                    .response();
-
-
-
-
+        given()
+            .spec(requestSpecBuilder())
+            .when()
+            .headers(headers)
+            .body(user)
+            .post(APIResources.valueOf(resource).getResource())
+            .then()
+            .spec(responseSpecification())
+            .extract()
+            .response();
   }
 
   private User createUser() {
     return User.builder().job("leader").name("morpheus").build();
-
-
   }
 
   @Given("^I log in as an (.*) to the site$")
@@ -144,13 +141,28 @@ User user;
   }
 
   @Given("^I work as (Engineer|Labour) in the (.*) company")
-  public void iWorkAsEngineerInTheSoftwareCompany(String str,String str1) {
-    System.out.println(str+"  --- "+str1);
+  public void iWorkAsEngineerInTheSoftwareCompany(String str, String str1) {
+    System.out.println(str + "  --- " + str1);
   }
 
   @Given("^I will test positive scenario(?: as well as \"([^\"]*)\")?$")
   public void iWillTestPositiveScenarioAsWellAs(String scenario) {
-    String scenarioName = scenario==null?"No Value":"Have Value";
+    String scenarioName = scenario == null ? "No Value" : "Have Value";
     System.out.println(scenarioName);
+  }
+
+  @When("I send a GET request to the covid server {string}")
+  public void iSendAGETRequestToTheCovidServer(String resource) {
+    RequestSpecification requestSpecification =
+        given()
+            .baseUri("https://cdn-api.co-vin.in/api")
+            .when()
+            .queryParam("pincode", "248001")
+            .queryParam("date", "18-05-2021")
+            .headers(headers);
+    response = requestSpecification.get(APIResources.valueOf(resource).getResource());
+
+    response.prettyPrint();
+
   }
 }

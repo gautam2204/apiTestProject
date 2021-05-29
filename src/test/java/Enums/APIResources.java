@@ -3,7 +3,8 @@ package Enums;
 public enum APIResources {
 
     GETUser("/api/users"),
-    POSTUser("/api/users");
+    POSTUser("/api/users"),
+    GETCOVIDSLOT("/v2/appointment/sessions/public/findByPin");
 
    private final String resource;
 
